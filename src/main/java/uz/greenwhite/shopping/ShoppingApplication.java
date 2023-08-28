@@ -11,3 +11,5 @@ public class ShoppingApplication {
 	}
 
 }
+
+// inventory , product, category, product_attrubutes
