@@ -11,4 +11,13 @@ public interface ProductCategoryService {
      * @return
      */
     public Page<ProductCategory> getAll(Pageable pageable);
+
+    ProductCategory create(ProductCategory category);
+
+    ProductCategory getById(Long id);
+
+    ProductCategory update(ProductCategory category);
+
+    void delete(Long id);
+
 }

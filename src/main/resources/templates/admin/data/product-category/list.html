@@ -1,10 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<head th:replace="admin/commons::head"></head>
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+    <div th:replace="admin/commons::header"></div>
+    <aside th:replace="admin/commons::aside"></aside>
 
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <div class="container mt-4">
+            <a name="" class="btn btn-primary" th:href="@{/admin/data/product-category/add}" role="button">Add
+                category</a>
+            <table class="table table-bordered table-inverse">
+                <thead class="thead-inverse">
+                <tr>
+                    <th>ID</th>
+                    <th>NAME</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item: ${list}">
+                    <td scope="row" th:text="${item.id}"></td>
+                    <td th:text="${item.name}"></td>
+                    <td>
+                        <a name="" id="" class="btn btn-primary" href="#"
+                           th:href="@{/admin/data/product-category/edit(id=${item.id})}" role="button">
+                            <i class="fa fa-pen" aria-hidden="true"></i>
+                        </a>
+                        <button type="button" class="btn btn-danger" data-toggle="modal"
+                                th:data-target="${'#id'+item.id}">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                        </button>
+                    </td>
+                    <div class="modal fade" th:attr="id='id' + ${item.id}"
+                         tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">O'chrish</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Siz rostdan ham <span class="alert-danger" th:text="${item.name}"></span>ni
+                                    o'chirmoqchimisiz?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <a th:href="@{'/admin/data/product-category/delete/' + ${item.id}}" type="button"
+                                       class="btn btn-danger">O'chirish</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </tr>
+                </tbody>
+            </table>
+            <!--            <div class="container">-->
+            <!--                <div class="row no-gutters">-->
+            <!--                    <div class="col-md-auto flex-fill h-100">-->
+            <!--                        <nav class="d-flex align-items-center justify-content-center h-100" aria-label="Page navigation example">-->
+            <!--                            <ul id="my_page"  class="pagination">-->
+            <!--                                <li class="prev page-item"><a class="page-link" th:href="@{'/pages/data/film?page=' + ${currentPage - 1} + '&size=' + ${pageSize}}">Previous</a></li>-->
+            <!--                                <li th:each="i: ${#numbers.sequence(1, totalPage)}"  class="page-item "><a class="page-link" th:href="@{'/pages/data/film?page=' + ${i} + '&size=' + ${pageSize}}" th:text="${i}"></a></li>-->
+            <!--                                <li class="next page-item"><a class="page-link" th:href="@{'/pages/data/film?page=' + ${currentPage + 1} + '&size=' + ${pageSize}}">Next</a></li>-->
+            <!--                            </ul>-->
+            <!--                        </nav>-->
+            <!--                    </div>-->
+            <!--                    <div class="col-sm-auto d-flex flex-row-reverse">-->
+            <!--                        <form autocomplete="nope">-->
+            <!--                            <div class="form-group float-right">-->
+            <!--                                <label>Row count per page</label>-->
+            <!--                                <select id="sizep" class="form-control" autocomplete="nope" style="width: 150px" th:onchange="'changeSize(this)'">-->
+            <!--                                    <option selected >Choose size...</option>-->
+            <!--                                    <option value="10" >10</option>-->
+            <!--                                    <option value="25" >25</option>-->
+            <!--                                    <option value="50" >50</option>-->
+            <!--                                    <option value="100" >100</option>-->
+            <!--                                    <option th:value="${filmsSize}" >All</option>-->
+            <!--                                </select>-->
+            <!--                            </div>-->
+            <!--                        </form>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--            </div>-->
+        </div>
+    </div>
+
+    <!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>-->
+
+    <!--    <script th:inline="javascript">-->
+    <!--        function changeSize(elm) {-->
+    <!--            window.location.href = "/pages/data/film?page=" + currentPage + "&size=" + elm.value;-->
+    <!--        }-->
+    <!--    </script>-->
+
+    <!--    <script th:inline="javascript">-->
+    <!--        /*<![CDATA[*/-->
+
+    <!--        var currentPage = /*[[${currentPage}]]*/ 'default';-->
+    <!--        var totalPage = /*[[${totalPage}]]*/ 'default';-->
+    <!--        var element = document.getElementById('my_page').children.item(currentPage);-->
+    <!--        $(element).addClass("active");-->
+
+    <!--        /*]]>*/-->
+    <!--    </script>-->
+
+
+    <!--    <script>$(document).ready(function() {-->
+    <!--        var pageItem = $(".pagination li").not(".prev,.next");-->
+    <!--        var prev = $(".pagination li.prev");-->
+    <!--        var next = $(".pagination li.next");-->
+
+    <!--        if(currentPage === 1)-->
+    <!--            prev.addClass("disabled");-->
+
+    <!--        if(currentPage === totalPage)-->
+    <!--            next.addClass("disabled")-->
+
+    <!--        pageItem.click(function() {-->
+    <!--            pageItem.removeClass("active");-->
+    <!--            $(this).not(".prev,.next").addClass("active");-->
+    <!--        });-->
+
+    <!--        next.click(function() {-->
+    <!--            if(!$('li.active').next().hasClass("next") && currentPage <= totalPage)-->
+    <!--                $('li.active').removeClass('active').next().not(".prev,.next").addClass('active');-->
+    <!--        });-->
+
+    <!--        prev.click(function() {-->
+    <!--            if(!$('li.active').prev().hasClass("prev") && currentPage >= 1)-->
+    <!--                $('li.active').removeClass('active').prev().not(".prev,.next").addClass('active');-->
+    <!--        });-->
+
+
+    <!--    });</script>-->
+
+
+    <!-- /.content-wrapper -->
+    <footer th:replace="admin/commons::footer"></footer>
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+        <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+<th:block th:replace="admin/commons::scripts"></th:block>
 </body>
 </html>
+
