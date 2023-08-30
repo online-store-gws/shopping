@@ -8,14 +8,20 @@ import org.springframework.stereotype.Component;
 import uz.greenwhite.shopping.entity.ProductCategory;
 import uz.greenwhite.shopping.repository.ProductCategoryRepository;
 
+import java.io.File;
+
 @Component
 @AllArgsConstructor
-public class FakeData implements ApplicationRunner {
+public class AppInit implements ApplicationRunner {
+
     private ProductCategoryRepository productCategoryRepository;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
         fillProductCategory();
+
+        File file = new File("FILES");
+        file.mkdir();
     }
 
 

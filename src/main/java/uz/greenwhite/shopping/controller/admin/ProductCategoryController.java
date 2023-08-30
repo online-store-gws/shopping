@@ -5,15 +5,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import uz.greenwhite.shopping.entity.ProductCategory;
 import uz.greenwhite.shopping.service.ProductCategoryService;
 
+import java.io.*;
 import java.util.List;
 
 @Controller
 @RequestMapping("/admin/data/product-category")
 @AllArgsConstructor
 public class ProductCategoryController {
+
+    private final String FILE_ROOT = "FILES";
 
     private final ProductCategoryService service;
 
@@ -49,6 +53,24 @@ public class ProductCategoryController {
     @GetMapping("/delete/{id}")
     public String deleteFilm(@PathVariable Long id) {
         service.delete(id);
+        return "redirect:/admin/data/product-category";
+    }
+
+    @PostMapping("/upload")
+    public String uploadImage(Model model, @RequestParam("image") MultipartFile file) throws IOException {
+
+        File sf = new File(FILE_ROOT + "/" + file.getOriginalFilename());
+        if (sf.createNewFile()) {
+            FileOutputStream fos = new FileOutputStream(sf);
+            BufferedOutputStream bw = new BufferedOutputStream(fos);
+
+            bw.write(file.getBytes());
+            bw.close();
+            fos.close();
+
+
+        }
+
         return "redirect:/admin/data/product-category";
     }
 
