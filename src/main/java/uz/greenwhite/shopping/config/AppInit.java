@@ -18,7 +18,7 @@ public class AppInit implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        fillProductCategory();
+//        fillProductCategory();
 
         File file = new File("FILES");
         file.mkdir();

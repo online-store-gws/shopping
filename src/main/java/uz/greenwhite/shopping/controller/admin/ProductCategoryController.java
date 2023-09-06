@@ -1,6 +1,10 @@
 package uz.greenwhite.shopping.controller.admin;
 
+import jakarta.servlet.http.HttpServletResponse;
+import jdk.jfr.Category;
 import lombok.AllArgsConstructor;
+import org.apache.catalina.webresources.FileResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +15,7 @@ import uz.greenwhite.shopping.service.ProductCategoryService;
 
 import java.io.*;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/admin/data/product-category")
@@ -34,8 +39,9 @@ public class ProductCategoryController {
     }
 
     @PostMapping("/add")
-    public String addFilm(@ModelAttribute ProductCategory category) {
-        service.create(category);
+    public String addFilm(@ModelAttribute ProductCategory category, @RequestParam("file") MultipartFile file) throws IOException {
+        category = service.create(category);
+        saveFile(category, file);
         return "redirect:/admin/data/product-category";
     }
 
@@ -46,32 +52,75 @@ public class ProductCategoryController {
     }
 
     @PostMapping("/edit")
-    public String editCategory(@ModelAttribute ProductCategory category) {
-        service.update(category);
+    public String editCategory(@ModelAttribute ProductCategory category, @RequestParam("file") MultipartFile file) throws IOException {
+        category = service.update(category);
+        saveFile(category, file);
         return "redirect:/admin/data/product-category";
     }
+
     @GetMapping("/delete/{id}")
     public String deleteFilm(@PathVariable Long id) {
         service.delete(id);
         return "redirect:/admin/data/product-category";
     }
 
-    @PostMapping("/upload")
-    public String uploadImage(Model model, @RequestParam("image") MultipartFile file) throws IOException {
+    @GetMapping("/image/{id}")
+    public void image(@PathVariable Long id, HttpServletResponse response) {
+        ProductCategory category = service.getById(id);
+        File file = new File(FILE_ROOT + "/category/" + category.getImage());
+        if (file.exists()) {
+            response.setContentType("application/octet-stream");
+            String headerKey = "Content-Disposition";
+        String headerValue = String.format("inline; filename=\"%s\"", file.getName());
+        response.setHeader(headerKey, headerValue);
+            FileInputStream inputStream;
+            try {
+                inputStream = new FileInputStream(file);
+                try {
+                    int c;
+                    while ((c = inputStream.read()) != -1) {
+                        response.getWriter().write(c);
+                    }
+                } finally {
+                    if (inputStream != null)
+                        try {
+                            inputStream.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    response.getWriter().close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
 
-        File sf = new File(FILE_ROOT + "/" + file.getOriginalFilename());
-        if (sf.createNewFile()) {
-            FileOutputStream fos = new FileOutputStream(sf);
-            BufferedOutputStream bw = new BufferedOutputStream(fos);
-
-            bw.write(file.getBytes());
-            bw.close();
-            fos.close();
-
-
+            }
+        } else {
+            throw new RuntimeException("File not exist");
         }
 
-        return "redirect:/admin/data/product-category";
+    }
+
+    public void saveFile(ProductCategory category, MultipartFile file) throws IOException {
+
+        new File(FILE_ROOT + "/category").mkdir();
+
+        String fileName = file.getOriginalFilename();
+        String ext = "";
+        if (fileName != null && fileName.contains(".")) {
+            ext = fileName.substring(fileName.lastIndexOf("."));
+        }
+        File sf = new File(FILE_ROOT + "/category/" + category.getId() + ext);
+
+        FileOutputStream fos = new FileOutputStream(sf);
+        BufferedOutputStream bw = new BufferedOutputStream(fos);
+
+        bw.write(file.getBytes());
+        bw.close();
+        fos.close();
+
+        category.setImage(sf.getName());
+        service.update(category);
+
     }
 
 

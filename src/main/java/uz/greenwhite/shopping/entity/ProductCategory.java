@@ -19,6 +19,8 @@ public class ProductCategory {
 
     private String name;
 
+    private String image;
+
     @ManyToOne
     private ProductCategory parent;
 

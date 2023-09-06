@@ -16,6 +16,7 @@
                 <tr>
                     <th>ID</th>
                     <th>NAME</th>
+                    <th>IMAGE</th>
                     <th></th>
                 </tr>
                 </thead>
@@ -23,6 +24,9 @@
                 <tr th:each="item: ${list}">
                     <td scope="row" th:text="${item.id}"></td>
                     <td th:text="${item.name}"></td>
+                    <td>
+                        <img  th:src="@{|/admin/data/product-category/image/${item.id}|}" height="50px" width="auto" alt="rasm"/>
+                    </td>
                     <td>
                         <a name="" id="" class="btn btn-primary" href="#"
                            th:href="@{/admin/data/product-category/edit(id=${item.id})}" role="button">
