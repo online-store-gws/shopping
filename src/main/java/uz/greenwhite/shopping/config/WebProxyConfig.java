@@ -18,5 +18,7 @@ public class WebProxyConfig implements WebMvcConfigurer {
         // user
         registry.addViewController("/user").setViewName("redirect:user/dashboard");
         registry.addViewController("/user/dashboard").setViewName("user/dashboard");
+
+        registry.addViewController("/login").setViewName("login");
     }
 }
